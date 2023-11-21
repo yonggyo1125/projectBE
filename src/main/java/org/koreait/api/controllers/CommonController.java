@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CommonController {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<JSONData<Object>> errorHandler(Exception e) {
+    public ResponseEntity<JSONData> errorHandler(Exception e) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         if (e instanceof CommonException) {
@@ -19,7 +19,7 @@ public class CommonController {
             status = commonException.getStatus();
         }
 
-        JSONData<Object> data = new JSONData<>();
+        JSONData data = new JSONData();
         data.setSuccess(false);
         data.setStatus(status);
         data.setMessage(e.getMessage());
