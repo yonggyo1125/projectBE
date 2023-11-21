@@ -1,10 +1,11 @@
 package org.koreait.configs.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
+import org.koreait.commons.Utils;
+import org.koreait.commons.exceptions.BadRequestException;
 import org.koreait.models.member.MemberInfo;
 import org.koreait.models.member.MemberInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +70,22 @@ public class TokenProvider {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, token, authorities);
 
         return authentication;
+    }
+
+    public void validateToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getPayload();
+
+        } catch (ExpiredJwtException e) {
+            throw new BadRequestException(Utils.getMessage("EXPIRED.JWT_TOKEN", "validation"));
+        } catch (UnsupportedJwtException e) {
+            throw new BadRequestException(Utils.getMessage("UNSUPPORTED.JWT_TOKEN", "validation"));
+        } catch (SecurityException | MalformedJwtException | IllegalArgumentException e) {
+            throw new BadRequestException(Utils.getMessage("INVALID_FORMAT.JWT_TOKEN", "validation"));
+        }
     }
 }
