@@ -25,18 +25,25 @@ public class Utils {
     }
 
 
-    public Map<String, List<String>> getMessages(Errors errors) {
-        Map<String, List<String>> data = new HashMap<>();
-        for (FieldError error : errors.getFieldErrors()) {
-            String field = error.getField();
-            List<String> messages = Arrays.stream(error.getCodes()).sorted(Comparator.reverseOrder())
-                    .map(c -> getMessage(c, "validation"))
-                    .filter(c -> c != null)
-                    .toList();
+    public static Map<String, List<String>> getMessages(Errors errors) {
+        try {
+            Map<String, List<String>> data = new HashMap<>();
+            for (FieldError error : errors.getFieldErrors()) {
+                String field = error.getField();
+                List<String> messages = Arrays.stream(error.getCodes()).sorted(Comparator.reverseOrder())
+                        .map(c -> getMessage(c, "validation"))
+                        .filter(c -> c != null)
+                        .toList();
 
-            data.put(field, messages);
+                data.put(field, messages);
+            }
+
+            return data;
+
+        } catch (Exception e) {
+            return null;
         }
 
-        return data;
+
     }
 }
