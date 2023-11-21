@@ -7,6 +7,7 @@ import org.koreait.commons.exceptions.BadRequestException;
 import org.koreait.commons.rests.JSONData;
 import org.koreait.models.member.MemberSaveService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private MemberSaveService saveService;
+    private final MemberSaveService saveService;
 
     @PostMapping
-    public JSONData join(@RequestBody @Valid RequestJoin form, Errors errors) {
+    public ResponseEntity<JSONData> join(@RequestBody @Valid RequestJoin form, Errors errors) {
         saveService.save(form, errors);
 
         if (errors.hasErrors()) {
@@ -31,6 +32,6 @@ public class MemberController {
         JSONData data = new JSONData();
         data.setStatus(HttpStatus.CREATED);
 
-        return data;
+        return ResponseEntity.status(data.getStatus()).body(data);
     }
 }

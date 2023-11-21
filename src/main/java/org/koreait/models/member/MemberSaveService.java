@@ -3,6 +3,7 @@ package org.koreait.models.member;
 import lombok.RequiredArgsConstructor;
 import org.koreait.api.controllers.members.JoinValidator;
 import org.koreait.api.controllers.members.RequestJoin;
+import org.koreait.commons.contants.MemberType;
 import org.koreait.entities.Member;
 import org.koreait.repositories.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +31,7 @@ public class MemberSaveService {
                 .name(form.name())
                 .password(hash)
                 .mobile(form.mobile())
+                .type(MemberType.USER)
                 .build();
 
         save(member);
