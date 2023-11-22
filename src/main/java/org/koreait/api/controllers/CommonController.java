@@ -4,6 +4,8 @@ import org.koreait.commons.exceptions.CommonException;
 import org.koreait.commons.rests.JSONData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,7 +22,13 @@ public class CommonController {
             status = commonException.getStatus();
 
             if (commonException.getMessages() != null) message = commonException.getMessages();
+        } else if (e instanceof BadCredentialsException) {
+            status = HttpStatus.UNAUTHORIZED; // 401
+        } else if (e instanceof AccessDeniedException) {
+            status = HttpStatus.FORBIDDEN; // 403
         }
+        // BadCredentialsException -> 500 -> 401
+        // AccessDeniedException -> 500 -> 403
 
         JSONData data = new JSONData();
         data.setSuccess(false);

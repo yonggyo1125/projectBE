@@ -51,6 +51,7 @@ public class MemberController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
 
+        return ResponseEntity.status(data.getStatus()).headers(headers).body(data);
     }
 
     private void errorProcess(Errors errors) {
