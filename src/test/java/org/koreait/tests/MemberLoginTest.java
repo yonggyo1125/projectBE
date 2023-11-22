@@ -48,7 +48,7 @@ public class MemberLoginTest {
                 .password(encoder.encode("_aA123456"))
                 .name("사용자01")
                 .mobile("010-0000-0000")
-                .type(MemberType.USER)
+                .type(MemberType.ADMIN)
                 .build();
         memberSaveService.save(member);
     }
@@ -77,7 +77,7 @@ public class MemberLoginTest {
         String accessToken = (String)data.getData();
 
 
-        mockMvc.perform(get("/api/v1/member/info")
+        mockMvc.perform(get("/api/v1/member/admin")
                 .header("Authorization", "Bearer " + accessToken)
         ).andDo(print())
                 .andExpect(status().isOk());
